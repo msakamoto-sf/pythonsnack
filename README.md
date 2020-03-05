@@ -29,3 +29,9 @@ $ python3 -m unittest discover
 - https://realpython.com/python-testing/#executing-your-first-test
 - https://realpython.com/python-mock-library/
 
+### coding rule
+
+- https://pep8-ja.readthedocs.io/ja/latest/
+- ［Python入門］Pythonコーディングスタイルガイド：Python入門 - ＠IT
+  - https://www.atmarkit.co.jp/ait/articles/1912/10/news045.html
+
