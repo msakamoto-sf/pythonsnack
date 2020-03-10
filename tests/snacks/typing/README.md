@@ -9,6 +9,8 @@ reference:
   - https://python.ms/type/
 - `Pythonとmypyで型ヒントを利用する（基礎編）`
   - https://doitu.info/blog/5aaa8deaab60b20097abdb83
+- `Python と型アノテーション`
+  - https://www.slideshare.net/quintia/python-76118249
 
 ### mypy check
 
