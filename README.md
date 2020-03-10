@@ -61,6 +61,8 @@ pip コマンドのヘルプ: `python -m pip help`
 - https://pip.pypa.io/en/stable/reference/
 - `Python, pip list / freezeでインストール済みパッケージ一覧を確認 | note.nkmk.me`
   - https://note.nkmk.me/python-pip-list-freeze/
+- `Python, pipでrequirements.txtを使ってパッケージ一括インストール | note.nkmk.me`
+  - https://note.nkmk.me/python-pip-install-requirements/
 - `よく使うpipコマンド - Qiita`
   - https://qiita.com/Masaaki_Inaba/items/fe4a246a7e6fcd9c4726
 
