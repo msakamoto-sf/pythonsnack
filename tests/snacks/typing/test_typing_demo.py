@@ -1,6 +1,5 @@
 import unittest
 from dataclasses import dataclass, field
-import dataclasses
 from typing import List, Dict
 
 # demonstration of typing module.
