@@ -32,7 +32,7 @@ class MyTypeDemos:
 class TestTypingDemo(unittest.TestCase):
 
     def test_my_type_demo(self):
-        a = MyTypeDemos()
+        a: MyTypeDemos = MyTypeDemos()
         self.assertEqual(a.str1, 'hello typing module')
         self.assertEqual(a.int1, 100)
         self.assertListEqual(a.strings, ['aaa', 'bbb', 'ccc'])
