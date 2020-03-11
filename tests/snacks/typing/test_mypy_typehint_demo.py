@@ -14,7 +14,6 @@ def int_to_str_demo_none(x: int) -> None:
 
 
 class TestMyPyTypehintDemo(unittest.TestCase):
-
     def test_int_to_str_demo(self):
         result: str = int_to_str_demo(123)
-        self.assertEqual(result, 'int to string 123')
+        self.assertEqual(result, "int to string 123")
