@@ -26,19 +26,65 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-run unittest:
-
+run from command line:
 ```
-$ cd (repository root directory)
-$ python -m unittest discover
-```
+cd (repository root directory)
+(activate venv)
 
-run mypy:
+## run unittest:
+python -m unittest discover
 
-```
-mypy tests
+## run flake8:
+flake8 snacks
+flake8 tests
+
+## run mypy:
 mypy snacks
+mypy tests
+
+## run black (dry-run)
+black --diff snacks
+black --diff tests
+
+## run black (write-back to files)
+black snacks
+black tests
 ```
+
+## vscode integration
+
+**before opening vscode, you MUST have done creating venv and pip install -r requirements**
+
+after opening vscode (first-time only):
+1. select "Python: Select Interpreter" command from the Command Palette (`Ctrl+Shift+P`)
+2. choose "Python 3.x.y ... .venv" (.venv python)
+   - NOTE: vscode automatically generate `.vscode/settings.json` at this time.
+3. add below settings to `.vscode/settings.json`
+
+```
+{
+    "python.venvPath": ".venv",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "python.linting.lintOnSave": true,
+
+    "python.pythonPath": "(path inserted by vscode)"
+}
+```
+
+- Why are you put `.vscode/settings.json` to git repository ?
+  - Because venv's `python.pythonPath` is different between some platoforms. for Win, `Scripts\\python.exe` <> but linux/macos, `bin/python`.
+  - I gave up putting these cross-platform behabiours to one-single-common `settings.json` X(
+
+refs:
+
+- `Using Python Environments in Visual Studio Code`
+  - https://code.visualstudio.com/docs/python/environments
+- `VS CodeでWorkspace毎に使用するPython実行環境を切り替える | LogixSquare`
+  - https://logixsquare.com/techblog/visual-studio-code-python-version-settings/
 
 ## reference
 
@@ -65,6 +111,31 @@ pip コマンドのヘルプ: `python -m pip help`
   - https://note.nkmk.me/python-pip-install-requirements/
 - `よく使うpipコマンド - Qiita`
   - https://qiita.com/Masaaki_Inaba/items/fe4a246a7e6fcd9c4726
+
+### linter, checker, formatter
+
+- flake8
+  - https://pypi.org/project/flake8/
+- mypy
+  - http://mypy-lang.org/
+  - https://github.com/python/mypy
+- black (formatter)
+  - https://github.com/psf/black
+
+- `Python開発を円滑に進めるためのツール設定 Part.1 - ログミーTech`
+  - https://logmi.jp/tech/articles/322611
+- `Python開発を円滑に進めるためのツール設定 Part.2 - ログミーTech`
+  - https://logmi.jp/tech/articles/322612
+- `Pythonでの開発を効率的に進めるためのツール設定`
+  - https://www.slideshare.net/aodag/python-172432039
+- `Python 3.7とVisual Studio Codeで型チェックが捗る内作Pythonアプリケーション開発環境の構築 - Qiita`
+  - https://qiita.com/shibukawa/items/1650724daf117fad6ccd
+- `超簡単VSCodeでPythonソースコード自動チェック・整形（venv・flake8・mypy・black利用）｜10mohi6｜note`
+  - https://note.com/10mohi6/n/n87e7867bfb79
+- `Visual Studio Code を使ったPython環境の構築 - Qiita`
+  - https://qiita.com/shinno21/items/c33802da7145b36106e2
+- `もうPythonの細かい書き方で議論しない。blackで自動フォーマットしよう - Make組ブログ`
+  - https://blog.hirokiky.org/entry/2019/06/03/202745
 
 ### unittest
 
