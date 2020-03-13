@@ -310,6 +310,8 @@ class TestMyData6(TestCase):
 
 @dataclass
 class MyData7:
+    # see: https://stackoverflow.com/questions/53632152/why-cant-dataclasses-have-mutable-defaults-in-their-class-attributes-declaratio # noqa: E501
+    # see: https://stackoverflow.com/questions/52063759/passing-default-list-argument-to-dataclasses # noqa: E501
     # ValueError: mutable default <class 'list'> for field strings1 is not allowed: use default_factory
     # strings1: List[str] = field(default=["aa", "bb"])
     strings2: List[str] = field(default_factory=lambda: ["aa", "bb"])
