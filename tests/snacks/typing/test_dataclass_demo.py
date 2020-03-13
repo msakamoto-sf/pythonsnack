@@ -14,6 +14,7 @@ from typing import List, Dict, Tuple, ClassVar
 
 class MyNoData1:
     # 型ヒントだけの場合、クラス変数として初期化されない
+    # see: https://www.python.org/dev/peps/pep-0526/#class-and-instance-variable-annotations
     str1: str
     int1: int
 
@@ -47,6 +48,7 @@ class TestMyNoData1(TestCase):
 
 class MyNoData2:
     # 初期値があれば、型ヒントが無い場合のクラス変数と同様に参照可能になる。
+    # see: https://www.python.org/dev/peps/pep-0526/#class-and-instance-variable-annotations
     str1: str = "xyz"
     int1: int = -1
 
@@ -73,6 +75,7 @@ class TestMyNoData2(TestCase):
 @dataclass
 class MyData1:
     # 型ヒントだけの場合、クラス変数として初期化されない
+    # see: https://www.python.org/dev/peps/pep-0526/#class-and-instance-variable-annotations
     str1: str
     int1: int
 
@@ -105,6 +108,7 @@ class TestMyData1(TestCase):
 @dataclass
 class MyData2:
     # 初期値があれば、型ヒントが無い場合のクラス変数と同様に参照可能になる。
+    # see: https://www.python.org/dev/peps/pep-0526/#class-and-instance-variable-annotations
     str1: str = "xyz"
     int1: int = -1
 
