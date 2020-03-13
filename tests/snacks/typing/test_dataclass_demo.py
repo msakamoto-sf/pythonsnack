@@ -1,8 +1,15 @@
 from unittest import TestCase
-from dataclasses import dataclass, field
-from typing import List, ClassVar
+from dataclasses import dataclass, field, FrozenInstanceError
+from typing import List, Dict, Tuple, ClassVar
 
 # demonstration of dataclass
+# ref : https://docs.python.org/ja/3/library/dataclasses.html
+# ref : https://docs.python.org/ja/3/library/typing.html
+
+# 全体通して、Pythonのクラス変数とインスタンス変数の扱いの違いに注意
+# ref: https://docs.python.org/ja/3/tutorial/classes.html
+# see: https://uxmilk.jp/41600
+# see: https://qiita.com/kxphotographer/items/60588b7c747094eba9f1
 
 
 class MyNoData1:
@@ -225,6 +232,99 @@ class TestMyData4(TestCase):
         self.assertEqual(d3.str6, "ZZZ")
 
 
-# TODO final
-# TODO @dataclass(freeze=True)
-# TODO list, map default factory
+@dataclass(frozen=True)
+class MyData5:
+    str1: str
+    int1: int
+
+
+class TestMyData5(TestCase):
+    def test_do(self):
+        d1: MyData5 = MyData5("hello", 100)
+        self.assertEqual(d1.str1, "hello")
+        self.assertEqual(d1.int1, 100)
+        with self.assertRaises(FrozenInstanceError) as cm:
+            d1.str1 = "aaa"
+        self.assertEqual(cm.exception.args[0], "cannot assign to field 'str1'")
+        with self.assertRaises(FrozenInstanceError) as cm:
+            d1.int1 = 200
+        self.assertEqual(cm.exception.args[0], "cannot assign to field 'int1'")
+
+
+@dataclass
+class MyData6:
+    strings1: List[str]
+    # ValueError: mutable default <class 'list'> for field strings2 is not allowed: use default_factory
+    # strings2: List[str] = field(default=["aa", "bb"])
+    strings3: List[str] = field(default_factory=lambda: ["aa", "bb"])
+    # mypy error: Attributes without a default cannot follow attributes with one
+    # dict1: Dict[str, str]
+    # ValueError: mutable default <class 'dict'> for field dict2 is not allowed: use default_factory
+    # dict2: Dict[str, str] = field(default={"k1": "v1", "k2": "v2"})
+    dict3: Dict[str, str] = field(default_factory=lambda: {"k1": "v1", "k2": "v2"})
+    # mypy error: Attributes without a default cannot follow attributes with one
+    # tuple1: Tuple[str, int]
+    tuple1: Tuple[str, int] = field(default=("xx", 100))
+    tuple2: Tuple[str, int] = field(default_factory=lambda: ("zz", 200))
+
+
+class TestMyData6(TestCase):
+    def test_do(self):
+        d1: MyData6 = MyData6(strings1=["abc", "def"])
+        self.assertListEqual(d1.strings1, ["abc", "def"])
+        self.assertListEqual(d1.strings3, ["aa", "bb"])
+        self.assertEqual(len(d1.dict3), 2)
+        self.assertEqual(d1.dict3["k1"], "v1")
+        self.assertEqual(d1.dict3["k2"], "v2")
+        self.assertEqual(d1.tuple1, ("xx", 100))
+        self.assertEqual(d1.tuple2, ("zz", 200))
+
+        d2: MyData6 = MyData6(strings1=["ABC", "DEF"])
+        self.assertListEqual(d2.strings1, ["ABC", "DEF"])
+        self.assertListEqual(d2.strings3, ["aa", "bb"])
+        self.assertEqual(len(d2.dict3), 2)
+        self.assertEqual(d2.dict3["k1"], "v1")
+        self.assertEqual(d2.dict3["k2"], "v2")
+        self.assertEqual(d2.tuple1, ("xx", 100))
+        self.assertEqual(d2.tuple2, ("zz", 200))
+
+        # default_factory で生成したdictについては、別インスタンスとなる。
+        self.assertIsNot(d1.strings3, d2.strings3)
+        self.assertIsNot(d1.dict3, d2.dict3)
+        # tuple については tuple の性質上、default でも default_factory でも同じインスタンスと判定される。
+        self.assertIs(d1.tuple1, d2.tuple1)
+        self.assertIs(d1.tuple2, d2.tuple2)
+
+        d3: MyData6 = MyData6(
+            strings1=["aaa", "bbb"],
+            strings3=["ccc", "ddd"],
+            dict3={"xx": "yy"},
+            tuple1=("AA", 10),
+            tuple2=("BB", 20),
+        )
+        self.assertListEqual(d3.strings1, ["aaa", "bbb"])
+        self.assertListEqual(d3.strings3, ["ccc", "ddd"])
+        self.assertEqual(len(d3.dict3), 1)
+        self.assertEqual(d3.dict3["xx"], "yy")
+        self.assertEqual(d3.tuple1, ("AA", 10))
+        self.assertEqual(d3.tuple2, ("BB", 20))
+
+        # default_factory を指定した場合、クラス変数としては初期値が無いため、クラス変数としては参照できない。
+        with self.assertRaises(AttributeError) as cm:
+            MyData6.strings3
+        self.assertEqual(
+            cm.exception.args[0], "type object 'MyData6' has no attribute 'strings3'"
+        )
+        with self.assertRaises(AttributeError) as cm:
+            MyData6.dict3
+        self.assertEqual(
+            cm.exception.args[0], "type object 'MyData6' has no attribute 'dict3'"
+        )
+        with self.assertRaises(AttributeError) as cm:
+            MyData6.tuple2
+        self.assertEqual(
+            cm.exception.args[0], "type object 'MyData6' has no attribute 'tuple2'"
+        )
+
+        # tuple1 については default 指定があるため、クラス変数として参照できる。
+        self.assertEqual(MyData6.tuple1, ("xx", 100))
