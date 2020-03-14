@@ -35,20 +35,16 @@ cd (repository root directory)
 python -m unittest discover
 
 ## run flake8:
-flake8 snacks
-flake8 tests
+flake8 snacks tests
 
 ## run mypy:
-mypy snacks
-mypy tests
+mypy snacks tests
 
 ## run black (dry-run)
-black --diff snacks
-black --diff tests
+black --diff snacks tests
 
 ## run black (write-back to files)
-black snacks
-black tests
+black snacks tests
 ```
 
 ## vscode integration
