@@ -100,4 +100,3 @@ class TestMyTypeDemoPair3(unittest.TestCase):
 
 
 # TODO more and more typing combination demo
-
