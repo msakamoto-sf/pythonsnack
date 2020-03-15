@@ -1,6 +1,6 @@
-import unittest
+from unittest import TestCase
 from dataclasses import dataclass, field
-from typing import List, Dict, TypeVar, Generic
+from typing import List, Dict, Any, Union, TypeVar, Generic, get_type_hints
 
 # demonstration of typing module.
 
@@ -24,7 +24,7 @@ class MyTypeDemo1:
     )
 
 
-class TestMyTypeDemo1(unittest.TestCase):
+class TestMyTypeDemo1(TestCase):
     def test_do(self):
         a: MyTypeDemo1 = MyTypeDemo1()
         self.assertEqual(a.str1, "hello typing module")
@@ -57,7 +57,7 @@ class MyTypeDemoPair1(Generic[T1, T2]):
         self.right = right
 
 
-class TestMyTypeDemoPair1(unittest.TestCase):
+class TestMyTypeDemoPair1(TestCase):
     def test_do(self):
         p1: MyTypeDemoPair1[int, str] = MyTypeDemoPair1(100, "hello")
         self.assertEqual(p1.left, 100)
@@ -75,7 +75,7 @@ class MyTypeDemoPair2(Generic[T1, T2, T3], MyTypeDemoPair1[T1, T2]):
         self.middle = middle
 
 
-class TestMyTypeDemoPair2(unittest.TestCase):
+class TestMyTypeDemoPair2(TestCase):
     def test_do(self):
         p1: MyTypeDemoPair2[int, str, int] = MyTypeDemoPair2(100, "hello", 200)
         self.assertEqual(p1.left, 100)
@@ -91,12 +91,53 @@ class MyTypeDemoPair3(Generic[T4], MyTypeDemoPair1[str, str]):
         self.middle = middle
 
 
-class TestMyTypeDemoPair3(unittest.TestCase):
+class TestMyTypeDemoPair3(TestCase):
     def test_do(self):
         p1: MyTypeDemoPair3[int] = MyTypeDemoPair3("hello", 100, "world")
         self.assertEqual(p1.left, "hello")
         self.assertEqual(p1.middle, 100)
         self.assertEqual(p1.right, "world")
+
+
+@dataclass
+class MyTypeDemo2:
+    str1: str = ""
+    int1: int = 0
+    strings1: List[str] = field(default_factory=lambda: [])
+
+    def some_method(self, str2: str, int2: int, float2: float, any2: Any):
+        pass
+
+    @classmethod
+    def some_class_method(cls, str3: str, list3: List[Any], union3: Union[str, int]):
+        pass
+
+
+# get_type_hints() demo
+# see-also:
+# - https://stackoverflow.com/questions/41692473/does-python-type-hint-annotations-cause-some-run-time-effects
+
+
+class TestGetTypeHintsDemo(TestCase):
+    def test_class_attr(self):
+        r1: Dict[str, Any] = get_type_hints(MyTypeDemo2)
+        self.assertEqual(r1["str1"], str)
+        self.assertEqual(r1["int1"], int)
+        self.assertEqual(r1["strings1"], List[str])
+
+    def test_method_attr(self):
+        o1: MyTypeDemo2 = MyTypeDemo2("hello", 100, ["aa", "bb"])
+        r1: Dict[str, Any] = get_type_hints(o1.some_method)
+        self.assertEqual(r1["str2"], str)
+        self.assertEqual(r1["int2"], int)
+        self.assertEqual(r1["float2"], float)
+        self.assertEqual(r1["any2"], Any)
+
+    def test_class_method_attr(self):
+        r1: Dict[str, Any] = get_type_hints(MyTypeDemo2.some_class_method)
+        self.assertEqual(r1["str3"], str)
+        self.assertEqual(r1["list3"], List[Any])
+        self.assertEqual(r1["union3"], Union[str, int])
 
 
 # TODO more and more typing combination demo
