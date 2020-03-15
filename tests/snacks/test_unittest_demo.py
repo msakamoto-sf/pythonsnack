@@ -1,7 +1,44 @@
 from unittest import TestCase, skip
+import tempfile
+from os import path
+
+# unittest demo
+# ref: https://docs.python.org/ja/3/library/unittest.html
 
 
-# TODO setUp() and tearDown()
+class TestUnittestSetupTeardown(TestCase):
+    def setUp(self):
+        self.tempdir1 = tempfile.TemporaryDirectory()
+        self.tempdir2 = tempfile.TemporaryDirectory("_suffix0_")
+        self.tempdir3 = tempfile.TemporaryDirectory("_suffix0_", "_prefix0_")
+
+    def test_demo1(self):
+        # print(self.tempdir1.name)
+        # print(self.tempdir2.name)
+        # print(self.tempdir3.name)
+        self.assertTrue(path.isdir(self.tempdir1.name))
+        self.assertTrue(path.isdir(self.tempdir2.name))
+        self.assertTrue(path.isdir(self.tempdir3.name))
+        self.assertTrue(path.exists(self.tempdir1.name))
+        self.assertTrue(path.exists(self.tempdir2.name))
+        self.assertTrue(path.exists(self.tempdir3.name))
+        filepaths = [
+            path.join(self.tempdir1.name, "日本語1_utf8.txt"),
+            path.join(self.tempdir2.name, "日本語2_utf8.txt"),
+            path.join(self.tempdir3.name, "日本語3_utf8.txt"),
+        ]
+        for filepath in filepaths:
+            with open(filepath, "w", encoding="utf8") as f:
+                print("日本語テキスト1", file=f)
+                f.write("日本語テキスト2")
+            with open(filepath, "r", encoding="utf8") as f:
+                text = f.read()
+                self.assertEqual(text, "日本語テキスト1\n日本語テキスト2")
+
+    def tearDown(self):
+        self.tempdir1.cleanup()
+        self.tempdir2.cleanup()
+        self.tempdir3.cleanup()
 
 
 @skip("skip demo for test class")
