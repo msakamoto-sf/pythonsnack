@@ -248,3 +248,17 @@ class TestUnittestAssertDemo(TestCase):
         self.assertRegex("abc", r"a(b|c){2}")
         # from 3.2
         self.assertNotRegex("def", r"a(b|c){2}")
+
+
+class TestSubTestDemo(TestCase):
+    def test_demo(self):
+        params = [
+            (["aa", "bb"], "_", "aa_bb"),
+            (["cc", "dd", "ee"], "+", "cc+dd+ee"),
+            ([], "x", ""),
+            ([], "", ""),
+        ]
+        for param in params:
+            strings, joiner, expected = param
+            with self.subTest(srclist=strings, separator=joiner, expectedstr=expected):
+                self.assertEqual(joiner.join(strings), expected)
