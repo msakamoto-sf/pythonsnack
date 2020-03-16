@@ -1,6 +1,6 @@
 from unittest import TestCase
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Union, TypeVar, Generic, get_type_hints
+from typing import List, Dict, Any, Union, TypeVar, Generic, get_type_hints, get_args
 
 # demonstration of typing module.
 
@@ -113,7 +113,7 @@ class MyTypeDemo2:
         pass
 
 
-# get_type_hints() demo
+# get_type_hints() and get_args() demo
 # see-also:
 # - https://stackoverflow.com/questions/41692473/does-python-type-hint-annotations-cause-some-run-time-effects
 
@@ -124,6 +124,9 @@ class TestGetTypeHintsDemo(TestCase):
         self.assertEqual(r1["str1"], str)
         self.assertEqual(r1["int1"], int)
         self.assertEqual(r1["strings1"], List[str])
+        type_args = list(get_args(r1["strings1"]))
+        self.assertEqual(len(type_args), 1)
+        self.assertEqual(type_args[0], str)
 
     def test_method_attr(self):
         o1: MyTypeDemo2 = MyTypeDemo2("hello", 100, ["aa", "bb"])
@@ -137,7 +140,14 @@ class TestGetTypeHintsDemo(TestCase):
         r1: Dict[str, Any] = get_type_hints(MyTypeDemo2.some_class_method)
         self.assertEqual(r1["str3"], str)
         self.assertEqual(r1["list3"], List[Any])
+        type_args = list(get_args(r1["list3"]))
+        self.assertEqual(len(type_args), 1)
+        self.assertEqual(type_args[0], Any)
         self.assertEqual(r1["union3"], Union[str, int])
+        type_args = list(get_args(r1["union3"]))
+        self.assertEqual(len(type_args), 2)
+        self.assertEqual(type_args[0], str)
+        self.assertEqual(type_args[1], int)
 
 
 # TODO more and more typing combination demo
