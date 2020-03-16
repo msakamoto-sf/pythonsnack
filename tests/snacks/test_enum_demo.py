@@ -160,7 +160,7 @@ class TestAdvancedUsageDemo(TestCase):
         self.assertEqual(StringRepeater.THREE_DASH.repeat("def"), "def-def-def")
 
     def test_custom_new_method(self):
-        class StringRepeater(Enum):
+        class StringRepeater2(Enum):
             count: int
             joiner: str
 
@@ -181,13 +181,13 @@ class TestAdvancedUsageDemo(TestCase):
                     strings.append(target)
                 return self.joiner.join(strings)
 
-        self.assertEqual(StringRepeater.ONE_DOT.repeat("hello"), "hello")
-        self.assertEqual(StringRepeater.TWO_COLON.repeat("abc"), "abc:abc")
-        self.assertEqual(StringRepeater.THREE_DASH.repeat("def"), "def-def-def")
+        self.assertEqual(StringRepeater2.ONE_DOT.repeat("hello"), "hello")
+        self.assertEqual(StringRepeater2.TWO_COLON.repeat("abc"), "abc:abc")
+        self.assertEqual(StringRepeater2.THREE_DASH.repeat("def"), "def-def-def")
 
-        e1 = StringRepeater(1)
+        e1 = StringRepeater2(1)
         self.assertEqual(e1.repeat("hello"), "hello")
-        self.assertIs(e1, StringRepeater.ONE_DOT)
-        e2 = StringRepeater["TWO_COLON"]
+        self.assertIs(e1, StringRepeater2.ONE_DOT)
+        e2 = StringRepeater2["TWO_COLON"]
         self.assertEqual(e2.repeat("abc"), "abc:abc")
-        self.assertIs(e2, StringRepeater.TWO_COLON)
+        self.assertIs(e2, StringRepeater2.TWO_COLON)
