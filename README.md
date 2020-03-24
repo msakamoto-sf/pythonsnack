@@ -1,7 +1,14 @@
 # pythonsnack
 Python demonstration, exercise, practice, study, example codes.
 
-require : Python 3.7 >= (using `unittest discover` : 3.2, pip as default : 3.6, `dataclasses` : 3.7)
+require : Python 3.8
+
+using:
+
+- `unittest discover` : 3.2
+- pip as default : 3.6
+- `dataclasses` : 3.7,
+- `functools.singledispatchmethod` : 3.8
 
 setup venv and install pip requirements:
 
