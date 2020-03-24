@@ -230,5 +230,4 @@ class TestClassInheritanceDemo(TestCase):
         self.assertEqual(o3.div(3), 17)  # 15/3 + 12
 
 
-# TODO abc (abstract base class) demo
 # TODO *args, **kwdargs parameter demo
