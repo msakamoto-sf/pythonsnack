@@ -229,13 +229,6 @@ class TestClassInheritanceDemo(TestCase):
         self.assertEqual(o3.mul(2), 360)  # 15 * 12 * 2
         self.assertEqual(o3.div(3), 17)  # 15/3 + 12
 
-    def test_method_overload_demo(self):
-        # see-also:
-        # https://stackoverflow.com/questions/10202938/how-do-i-use-method-overloading-in-python
-        # https://docs.python.org/ja/3/library/functools.html#functools.singledispatch
-        # TODO
-        pass
-
 
 # TODO abc (abstract base class) demo
 # TODO *args, **kwdargs parameter demo
