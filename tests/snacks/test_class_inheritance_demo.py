@@ -228,6 +228,3 @@ class TestClassInheritanceDemo(TestCase):
         self.assertEqual(o3.sub(10), 5)  # 15 - 10
         self.assertEqual(o3.mul(2), 360)  # 15 * 12 * 2
         self.assertEqual(o3.div(3), 17)  # 15/3 + 12
-
-
-# TODO *args, **kwdargs parameter demo
