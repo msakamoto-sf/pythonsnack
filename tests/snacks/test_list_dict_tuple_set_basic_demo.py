@@ -3,6 +3,9 @@ from unittest import TestCase
 # demonstration of python major data structure (list, dict, tuple, set) basic operations
 # ref: https://docs.python.org/ja/3/tutorial/datastructures.html
 
+# NOTE: this test code assume (or depend) new order-preserving dict (from 3.6)
+# see-also: https://docs.python.org/3.6/whatsnew/3.6.html#new-dict-implementation
+
 
 class TestListDictTupleSetBasicDemo(TestCase):
     def test_list_demo(self):
@@ -201,6 +204,12 @@ class TestListDictTupleSetBasicDemo(TestCase):
         self.assertEqual(t[0], (1, 2))
         self.assertEqual(t[1], (3, 4))
         self.assertEqual(t[2], (5, 6))
+
+        # in/not in demo
+        t = 10, 20, 30
+        self.assertTrue(10 in t)
+        self.assertFalse(99 in t)
+        self.assertTrue(99 not in t)
 
         # list to tuple
         # see-also: https://note.nkmk.me/python-list-tuple-convert/
