@@ -134,14 +134,95 @@ class TestClassInheritanceDemo(TestCase):
         # def f5(name, /, **kwargs) -> str:
         #     pass
 
-    def test_arg_type_mixin_demo(self):
-        # TODO *args, **kwdargs parameter demo
-        pass
-
     def test_arbitrary_arg_list_demo(self):
-        # TODO
-        pass
+        def f1(prefix: str, *strings):
+            return prefix + ",".join(strings)
+
+        def f2(prefix: str, *strings, sep=",", postfix: str):
+            return prefix + ",".join(strings) + postfix
+
+        self.assertEqual(f1("abc", "def", "ghi", "jkl"), "abcdef,ghi,jkl")
+        self.assertEqual(
+            f2("abc", "def", "ghi", "jkl", postfix="zzz"), "abcdef,ghi,jklzzz"
+        )
+
+        def f3(prefix: str, *ints_of_xyz):
+            xyz: int = 0
+            if len(ints_of_xyz) == 0:
+                raise TypeError("empty xyz")
+
+            if len(ints_of_xyz) == 1:
+                xyz = ints_of_xyz[0]
+
+            if len(ints_of_xyz) == 2:
+                x, y = ints_of_xyz
+                xyz = x + y
+
+            if len(ints_of_xyz) == 3:
+                x, y, z = ints_of_xyz
+                xyz = x + y + z
+
+            if len(ints_of_xyz) > 3:
+                raise TypeError("ints_of_xyz over 3")
+
+            return prefix + str(xyz)
+
+        self.assertEqual(f3("x+y+z=", 10, 20, 30), "x+y+z=60")
+        self.assertEqual(f3("x+y+z=", 10, 20), "x+y+z=30")
+        self.assertEqual(f3("x+y+z=", 10), "x+y+z=10")
+        with self.assertRaises(TypeError) as cm:
+            f3("xxx")
+        self.assertEqual(str(cm.exception), "empty xyz")
+        with self.assertRaises(TypeError) as cm:
+            f3("xxx", 1, 2, 3, 4)
+        self.assertEqual(str(cm.exception), "ints_of_xyz over 3")
+
+    def test_arg_type_mixin_demo(self):
+        def f1(prefix: str, suffix: str, *args, **kwargs):
+            r: str = prefix
+            for i, arg in enumerate(args):
+                r += ",*a[{}]=[{}]".format(i, arg)
+            for kw, kwarg in kwargs.items():
+                r += ",**kw[{}]=[{}]".format(kw, kwarg)
+            return r + suffix
+
+        self.assertEqual(f1(">>", ",<<"), ">>,<<")
+        self.assertEqual(
+            f1(">>", ",<<", 10, 20, 30), ">>,*a[0]=[10],*a[1]=[20],*a[2]=[30],<<"
+        )
+        self.assertEqual(
+            f1(">>", ",<<", 10, 20, 30, kw1="aa", kw2="bb"),
+            ">>,*a[0]=[10],*a[1]=[20],*a[2]=[30],**kw[kw1]=[aa],**kw[kw2]=[bb],<<",
+        )
 
     def test_unpack_arg_list_demo(self):
-        # TODO
-        pass
+        def f1(*args, **kwargs):
+            r: str = ">>"
+            for i, arg in enumerate(args):
+                r += ",*a[{}]=[{}]".format(i, arg)
+            for kw, kwarg in kwargs.items():
+                r += ",**kw[{}]=[{}]".format(kw, kwarg)
+            return r + ",<<"
+
+        self.assertEqual(
+            f1(10, 20, 30, kw1="aa", kw2="bb"),
+            ">>,*a[0]=[10],*a[1]=[20],*a[2]=[30],**kw[kw1]=[aa],**kw[kw2]=[bb],<<",
+        )
+        self.assertEqual(
+            f1([1, 2, 3], kw1="aa", kw2="bb"),
+            ">>,*a[0]=[[1, 2, 3]],**kw[kw1]=[aa],**kw[kw2]=[bb],<<",
+        )
+        # unpack list to arbitrary position arguments
+        self.assertEqual(
+            f1(*[1, 2, 3], kw1="aa", kw2="bb"),
+            ">>,*a[0]=[1],*a[1]=[2],*a[2]=[3],**kw[kw1]=[aa],**kw[kw2]=[bb],<<",
+        )
+        self.assertEqual(
+            f1("x", {"kw1": "aa", "kw2": "bb"}),
+            ">>,*a[0]=[x],*a[1]=[{'kw1': 'aa', 'kw2': 'bb'}],<<",
+        )
+        # unpack dictionary to keyword arguments
+        self.assertEqual(
+            f1("x", **{"kw1": "aa", "kw2": "bb"}),
+            ">>,*a[0]=[x],**kw[kw1]=[aa],**kw[kw2]=[bb],<<",
+        )
